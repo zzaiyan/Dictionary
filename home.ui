@@ -6,147 +6,223 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>580</width>
+    <width>400</width>
     <height>480</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Home</string>
+  <property name="focusPolicy">
+   <enum>Qt::ClickFocus</enum>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout_3">
-   <item>
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Searching</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
+  <property name="windowTitle">
+   <string>Dictionary</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+QComboBox QAbstractItemView::item { 
+	min-height: 40px; 
+	min-width: 60px;
+}
+
+
+QTextEdit{
+	border: 1px solid #BEBFC2;
+	border-radius: 2px;
+}
+QLabel{
+	color: #4F596A;
+}
+QTableWidget{
+	 border: 1px solid #BEBFC2;
+	color: #444;
+}
+QTreeWidget{
+    color: #444;
+	padding:5px;
+    background-color: white;
+    border: 1px solid #BEBFC2;
+	border-radius: 5px;
+}
+QTableWidget::item:selected{
+	border: 1px solid #BEBFC2;
+	color: #444;
+}
+ 
+QTableWidget::item:hover{
+	background: #f6f6f6;
+}
+</string>
+  </property>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>120</y>
+     <width>360</width>
+     <height>320</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::StrongFocus</enum>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="lineEdit">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>80</y>
+     <width>360</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>0</width>
+     <height>40</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <family>JetBrains Mono</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
+   </property>
+  </widget>
+  <widget class="QTreeWidget" name="treeWidget">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>140</y>
+     <width>360</width>
+     <height>320</height>
+    </rect>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::ClickFocus</enum>
+   </property>
+   <column>
+    <property name="text">
+     <string notr="true">1</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>20</y>
+     <width>361</width>
+     <height>42</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>20</number>
+    </property>
+    <item>
+     <widget class="QComboBox" name="comboBox">
+      <property name="minimumSize">
+       <size>
+        <width>90</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>文泉驿微米黑</family>
+        <pointsize>12</pointsize>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::ClickFocus</enum>
+      </property>
+      <property name="frame">
+       <bool>false</bool>
+      </property>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="label_4">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Input :</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="lineEdit"/>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton">
-          <property name="text">
-           <string>Search !</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <property name="text">
+        <string>顺序搜索</string>
+       </property>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Via</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="comboBox">
-          <item>
-           <property name="text">
-            <string>朴素循环</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>BST 树</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>AVL 树</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>红黑树</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Treap 树</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Trie 树</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>比较次数：000 次</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <property name="text">
+        <string>BST 树</string>
+       </property>
       </item>
       <item>
-       <widget class="QTableWidget" name="currentTable">
-        <attribute name="horizontalHeaderVisible">
-         <bool>true</bool>
-        </attribute>
-        <attribute name="horizontalHeaderCascadingSectionResizes">
-         <bool>true</bool>
-        </attribute>
-        <attribute name="verticalHeaderVisible">
-         <bool>false</bool>
-        </attribute>
-       </widget>
+       <property name="text">
+        <string>AVL 树</string>
+       </property>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Search Histories</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QTableWidget" name="histaryTable"/>
+       <property name="text">
+        <string>红黑树</string>
+       </property>
       </item>
-     </layout>
-    </widget>
-   </item>
-  </layout>
+      <item>
+       <property name="text">
+        <string>Treap</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Trie 树</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QPushButton" name="pushButton">
+      <property name="minimumSize">
+       <size>
+        <width>100</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>JetBrains Mono</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::ClickFocus</enum>
+      </property>
+      <property name="text">
+       <string>Search!</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <zorder>layoutWidget</zorder>
+  <zorder>treeWidget</zorder>
+  <zorder>tableWidget</zorder>
+  <zorder>lineEdit</zorder>
  </widget>
  <resources/>
  <connections/>
