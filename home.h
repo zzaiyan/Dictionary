@@ -33,49 +33,33 @@ class Home : public QWidget {
   ~Home();
   int SearchModelChoice = 0;
   // Search
-  void BasicSearch(QString s,
-                   vector<QString>& vForEnglish,
-                   vector<QString>& vForChinese) {
-    for (int i = 1; i <= 10; i++) {
-      vForEnglish.push_back(s + QString::number(i));
-      vForChinese.push_back("12123");
-    }
-  }
-  void BSTSearch(QString s,
-                 vector<QString>& vForEnglish,
-                 vector<QString>& vForChinese) {}
-  void AVLSearch(QString s,
-                 vector<QString>& vForEnglish,
-                 vector<QString>& vForChinese);
-  void RBSearch(QString s,
-                vector<QString>& vForEnglish,
-                vector<QString>& vForChinese) {}
-  void TreapSearch(QString s,
-                   vector<QString>& vForEnglish,
-                   vector<QString>& vForChinese) {}
-  void TrieSearch(QString s,
-                  vector<QString>& vForEnglish,
-                  vector<QString>& vForChinese) {}
+  void BasicSearch(QString s);
+  void BSTSearch(QString s) {}
+  void AVLSearch(QString s);
+  void RBSearch(QString s);
+  void TreapSearch(QString s) {}
+  void TrieSearch(QString s) {}
 
   void Search(QString s) {
+    wCmp = 0;
     switch (SearchModelChoice) {
       case 0:
-        BasicSearch(s, vectorForEnglish, vectorForChinese);
+        BasicSearch(s);
         break;
       case 1:
-        BSTSearch(s, vectorForEnglish, vectorForChinese);
+        BSTSearch(s);
         break;
       case 2:
-        AVLSearch(s, vectorForEnglish, vectorForChinese);
+        AVLSearch(s);
         break;
       case 3:
-        RBSearch(s, vectorForEnglish, vectorForChinese);
+        RBSearch(s);
         break;
       case 4:
-        TreapSearch(s, vectorForEnglish, vectorForChinese);
+        TreapSearch(s);
         break;
       case 5:
-        TrieSearch(s, vectorForEnglish, vectorForChinese);
+        TrieSearch(s);
         break;
       default:
         break;
@@ -95,12 +79,13 @@ class Home : public QWidget {
  private:
   Ui::Home* ui;
 
-  bool havePre(const QString& str, const QString& pre);
+  int getPre(const QString& str1, const QString& str2) const;
+  void record(int t);
 
   // Data
   vector<wNode> seq;
   AVLTree* avl;
-  set<wNode> rbt;
+  map<rbNode, QString> rbt;
   void build();
 };
 #endif  // HOME_H

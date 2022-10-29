@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>480</width>
     <height>480</height>
    </rect>
   </property>
@@ -57,7 +57,7 @@ QTableWidget::item:hover{
     <rect>
      <x>20</x>
      <y>120</y>
-     <width>360</width>
+     <width>440</width>
      <height>320</height>
     </rect>
    </property>
@@ -82,7 +82,7 @@ QTableWidget::item:hover{
     <rect>
      <x>20</x>
      <y>80</y>
-     <width>360</width>
+     <width>440</width>
      <height>40</height>
     </rect>
    </property>
@@ -110,7 +110,7 @@ QTableWidget::item:hover{
     <rect>
      <x>20</x>
      <y>140</y>
-     <width>360</width>
+     <width>440</width>
      <height>320</height>
     </rect>
    </property>
@@ -128,7 +128,7 @@ QTableWidget::item:hover{
     <rect>
      <x>20</x>
      <y>20</y>
-     <width>361</width>
+     <width>441</width>
      <height>42</height>
     </rect>
    </property>
@@ -191,6 +191,42 @@ QTableWidget::item:hover{
     </item>
     <item>
      <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QLabel" name="labelCmp">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="font">
+       <font>
+        <family>JetBrains Mono</family>
+        <pointsize>14</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>CmpTimes: 00</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer_2">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>

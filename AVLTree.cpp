@@ -1,14 +1,16 @@
 #include "AVLTree.h"
 
 int AVLTree::Search(const QString s, AVLNode* ptr) {
-  if (ptr == nullptr)
-    return -1;
-  else if (s < getEn(ptr))
+  // Alert: ptr != nullptr
+  wCmp++;
+  if (s < getEn(ptr) && ptr->left)
     return Search(s, ptr->left);
-  else if (s > getEn(ptr))
+  if (s > getEn(ptr) && ptr->right)
     return Search(s, ptr->right);
-  else
+  if (s == getEn(ptr)) {
     return ptr->num;
+  }
+  return -1 * ptr->num;  // Last Before Failure
 }
 
 void AVLTree::RotateL(AVLNode*& ptr) {

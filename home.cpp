@@ -9,7 +9,7 @@ Home::Home(QWidget* parent) : QWidget(parent), ui(new Ui::Home) {
   ui->tableWidget->installEventFilter(this);
   ui->treeWidget->installEventFilter(this);
   ui->tableWidget->setHidden(true);
-  ui->treeWidget->setHeaderLabel("headlabel");
+  ui->treeWidget->setHeaderLabel("HeadLabel");
 
   QStyledItemDelegate* itemDelegate = new QStyledItemDelegate();
   ui->comboBox->setItemDelegate(itemDelegate);
@@ -20,27 +20,21 @@ Home::Home(QWidget* parent) : QWidget(parent), ui(new Ui::Home) {
   ui->tableWidget->setShowGrid(false);              //设置不显示格子线
   ui->tableWidget->verticalHeader()->setVisible(false);  //设置垂直头不可见
   ui->tableWidget->horizontalHeader()->setVisible(false);  //设置水平头不可见
-  ui->tableWidget->horizontalHeader()->resizeSection(0, 120);
-  ui->tableWidget->horizontalHeader()->resizeSection(1, 220);
-  ui->tableWidget->setItem(0, 0, new QTableWidgetItem("zhangsan"));
-  ui->tableWidget->setItem(0, 1, new QTableWidgetItem("n.法外狂徒"));
+  ui->tableWidget->horizontalHeader()->resizeSection(0, 160);
+  ui->tableWidget->horizontalHeader()->resizeSection(1, 260);
 
-  build();
+  build();  // Read Dict File
 }
 
 Home::~Home() {
   delete ui;
 }
 
-bool Home::havePre(const QString& str, const QString& pre) {
-  int len1 = str.size(), len2 = pre.size();
-  if (len1 <= len2)
-    return false;
-  for (int i = 0; i < len2; i++) {
-    if (str[i] != pre[i])
-      return false;
-  }
-  return true;
+int Home::getPre(const QString& str1, const QString& str2) const {
+  int m = min(str1.length(), str2.length()), ret = 0;
+  for (int i = 0; i < m; i++)
+    ret += str1[i] == str2[i];
+  return ret;
 }
 
 bool Home::eventFilter(QObject* watched, QEvent* event) {
@@ -75,14 +69,12 @@ void Home::on_lineEdit_textChanged(const QString& arg1) {
   QString s;
   if (!(ui->lineEdit->text().isEmpty())) {
     s = ui->lineEdit->text();
-
     Search(s);
-
     if (vectorForEnglish.size() <= 0) {
       ui->tableWidget->setHidden(true);
     } else {
       int a = vectorForEnglish.size();
-      int temp = (a < 10) ? a : 10;
+      int temp = min(a, 10);
       for (int i = 0; i < temp; i++) {
         QString str = vectorForChinese[i];
         if (vectorForEnglish[i].length() <= 0) {
@@ -111,7 +103,7 @@ void Home::on_lineEdit_textChanged(const QString& arg1) {
 void Home::on_pushButton_clicked() {
   vectorForEnglish.clear();
   vectorForChinese.clear();
-  ui->treeWidget->clear();
+  //  ui->treeWidget->clear();
   ui->tableWidget->hide();
   if (!(ui->lineEdit->text().isEmpty())) {
     QString s;
@@ -136,8 +128,6 @@ void Home::on_pushButton_clicked() {
           QTreeWidgetItem* item = new QTreeWidgetItem(
               QStringList() << ui->lineEdit->text() << str2);
           ui->treeWidget->addTopLevelItem(item);
-          ui->treeWidget->addTopLevelItem(item);
-          ui->treeWidget->addTopLevelItem(item);
         };
       }
     }
@@ -149,12 +139,15 @@ void Home::on_pushButton_clicked() {
 };
 
 void Home::on_tableWidget_cellDoubleClicked(int row, int column) {
-  if (ui->tableWidget->item(row, column)->text().length() >= 0) {
-    ui->lineEdit->insert(ui->tableWidget->item(row, column)->text());
+  if (ui->tableWidget->item(row, column)->text().length()) {
+    ui->lineEdit->setText(ui->tableWidget->item(row, column)->text());
     ui->tableWidget->setHidden(true);
-  };
-  return;
-};
+  }
+}
+
+void Home::record(int t) {
+  ui->labelCmp->setText(QString("CmpTimes: %1").arg(t));
+}
 
 void Home::build() {
   ifstream ifs("/home/z/Desktop/QPro/Dictionary/EnWords.csv", ios::in);
@@ -182,28 +175,62 @@ void Home::build() {
   auto rt = avl->getRoot();
   for (int i = 0; i < seq.size(); i++) {
     avl->Insert(i, rt);
+    rbt.insert({{seq[i].en}, seq[i].zh});
   }
-  //  avl->midOrder(rt);
-  //  avl->midOrder(avl->getRoot());
   qDebug() << "avl.size = " << avl->vec.size();
-
+  qDebug() << "rbt.size = " << rbt.size();
   ifs.close();
 }
 
-void Home::AVLSearch(QString s,
-                     vector<QString>& vForEnglish,
-                     vector<QString>& vForChinese) {
+void Home::BasicSearch(QString s) {
+  int r = 0, maxPre = 0;
+  for (; r < seq.size(); r++) {
+    wCmp++;
+    int Pre = getPre(seq[r].en, s);
+    maxPre = max(Pre, maxPre);
+    if (maxPre >= s.size())
+      break;
+  }
+  record(wCmp);
+  for (int i = r, cnt = 0; i < seq.size() && cnt < 10; i++) {
+    if (getPre(s, seq[i].en) >= s.size()) {
+      vectorForEnglish.push_back(seq[i].en);
+      vectorForChinese.push_back(seq[i].zh);
+      cnt++;
+    }
+  }
+}
+
+void Home::AVLSearch(QString s) {
   int r = avl->Search(s, avl->getRoot());
   qDebug() << "r = " << r;
+  record(wCmp);
+  //  qDebug() << "wCmp = " << wCmp;
   if (r == -1) {
     qDebug("Searching Failed!");
     return;
   }
-  vForEnglish.clear();
-  vForChinese.clear();
+  r = abs(r);
+  for (int i = r, cnt = 0; i < seq.size() && cnt < 10; i++) {
+    if (getPre(s, seq[i].en) >= s.size()) {
+      vectorForEnglish.push_back(seq[i].en);
+      vectorForChinese.push_back(seq[i].zh);
+      cnt++;
+    }
+  }
+}
 
-  for (int i = r; i < seq.size() && i < r + 10; i++) {
-    vForEnglish.push_back(seq[i].en);
-    vForChinese.push_back(seq[i].zh);
+void Home::RBSearch(QString s) {
+  auto it = rbt.lower_bound({s});
+  if (it->first.data != s) {
+    qDebug("Searching Failed!");
+  }
+  record(wCmp);
+  int cnt = 0;
+  for (; it != rbt.end() && cnt < 10; it++) {
+    if (getPre(s, it->first.data) >= s.size()) {
+      vectorForEnglish.push_back(it->first.data);
+      vectorForChinese.push_back(it->second);
+    }
   }
 }
