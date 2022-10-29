@@ -63,11 +63,18 @@ QTableWidget::item:hover{
    </property>
    <property name="font">
     <font>
-     <pointsize>10</pointsize>
+     <family>JetBrains Mono</family>
+     <pointsize>12</pointsize>
     </font>
    </property>
    <property name="focusPolicy">
     <enum>Qt::StrongFocus</enum>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::SingleSelection</enum>
    </property>
   </widget>
   <widget class="QLineEdit" name="lineEdit">

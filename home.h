@@ -1,6 +1,7 @@
 #ifndef HOME_H
 #define HOME_H
 
+#include <bits/stdc++.h>
 #include <QEvent>
 #include <QLabel>
 #include <QMessageBox>
@@ -8,7 +9,11 @@
 #include <QString>
 #include <QStringList>
 #include <QWidget>
-#include <iostream>
+#include "AVLTree.h"
+#include "wNode.h"
+
+using namespace std;
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class Home;
@@ -20,29 +25,37 @@ class Home : public QWidget {
 
  public:
   Home(QWidget* parent = nullptr);
-  std::vector<QString> vectorForEnglish;
-  std::vector<QString> vectorForChinese;
+  vector<QString> vectorForEnglish;
+  vector<QString> vectorForChinese;
   bool eventFilter(QObject* watched, QEvent* event);
   QStandardItemModel* standItemModel;
   QStandardItemModel* standItemModel2;
   ~Home();
   int SearchModelChoice = 0;
-  ///////////////////////////////////////////////////////Search函数///////////////////////////////////////////////
+  // Search
   void BasicSearch(QString s,
-                   std::vector<QString> vForEnglish,
-                   std::vector<QString> vForChinese) {}
+                   vector<QString>& vForEnglish,
+                   vector<QString>& vForChinese) {
+    for (int i = 1; i <= 10; i++) {
+      vForEnglish.push_back(s + QString::number(i));
+      vForChinese.push_back("12123");
+    }
+  }
   void BSTSearch(QString s,
-                 std::vector<QString> vForEnglish,
-                 std::vector<QString> vForChinese) {}
+                 vector<QString>& vForEnglish,
+                 vector<QString>& vForChinese) {}
   void AVLSearch(QString s,
-                 std::vector<QString> vForEnglish,
-                 std::vector<QString> vForChinese) {}
+                 vector<QString>& vForEnglish,
+                 vector<QString>& vForChinese);
   void RBSearch(QString s,
-                std::vector<QString> vForEnglish,
-                std::vector<QString> vForChinese) {}
-  void DIYSearch(QString s,
-                 std::vector<QString> vForEnglish,
-                 std::vector<QString> vForChinese) {}
+                vector<QString>& vForEnglish,
+                vector<QString>& vForChinese) {}
+  void TreapSearch(QString s,
+                   vector<QString>& vForEnglish,
+                   vector<QString>& vForChinese) {}
+  void TrieSearch(QString s,
+                  vector<QString>& vForEnglish,
+                  vector<QString>& vForChinese) {}
 
   void Search(QString s) {
     switch (SearchModelChoice) {
@@ -59,7 +72,10 @@ class Home : public QWidget {
         RBSearch(s, vectorForEnglish, vectorForChinese);
         break;
       case 4:
-        DIYSearch(s, vectorForEnglish, vectorForChinese);
+        TreapSearch(s, vectorForEnglish, vectorForChinese);
+        break;
+      case 5:
+        TrieSearch(s, vectorForEnglish, vectorForChinese);
         break;
       default:
         break;
@@ -78,5 +94,13 @@ class Home : public QWidget {
 
  private:
   Ui::Home* ui;
+
+  bool havePre(const QString& str, const QString& pre);
+
+  // Data
+  vector<wNode> seq;
+  AVLTree* avl;
+  set<wNode> rbt;
+  void build();
 };
 #endif  // HOME_H
