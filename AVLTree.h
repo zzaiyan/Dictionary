@@ -29,7 +29,10 @@ class AVLTree {
  public:
   vector<wNode> vec;
 
-  AVLTree(const vector<wNode>& v) : root(nullptr), vec(v) {}
+  AVLTree(const vector<wNode>& v) : root(nullptr), vec(v) {
+    for (int i = 0, len = vec.size(); i < len; i++)
+      Insert(i);
+  }
   ~AVLTree(){};
   AVLNode* getRoot() { return root; }
   bool Insert(int n, AVLNode*& ptr);

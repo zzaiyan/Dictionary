@@ -184,20 +184,23 @@ void Home::build() {
   sort(seq.begin(), seq.end());
   qDebug() << "seq.size = " << seq.size();
 
-  // Start build BST, AVL, RBT
   bst = new BSTree(seq);
-  avl = new AVLTree(seq);
-  //  trp = new Treap(seq);
-  for (int i = 0; i < seq.size(); i++) {
-    bst->Insert(i);
-    avl->Insert(i);
-    rbt.insert({{seq[i].en}, seq[i].zh});
-  }
-  qDebug() << "bst.size = " << bst->vec.size();
+  qDebug() << "bst builded";
   bst->makeClue();
   qDebug() << "bst is Clued";
-  qDebug() << "avl.size = " << avl->vec.size();
-  qDebug() << "rbt.size = " << rbt.size();
+
+  avl = new AVLTree(seq);
+  qDebug() << "avl builded";
+
+  for (int i = 0; i < seq.size(); i++) {
+    rbt.insert({{seq[i].en}, seq[i].zh});
+  }
+
+  qDebug() << "rbt builded";
+
+  trp = new Treap(seq);
+  qDebug() << "trp builded";
+
   ifs.close();
 }
 
@@ -214,7 +217,6 @@ void Home::BasicSearch(const QString& s) {
     if (maxPre >= s.size())
       break;
   }
-  record(wCmp);
   for (int i = r, cnt = 0; i < seq.size() && cnt < 10; i++) {
     if (getPre(s, seq[i].en) >= s.size()) {
       vectorForEnglish.push_back(seq[i].en);
@@ -228,7 +230,6 @@ void Home::BSTSearch(const QString& s) {
   qDebug() << "BST Start Searching!";
   auto ptr = bst->Search(s, bst->getRoot());
   qDebug() << "ptr.num = " << ptr->num;
-  record(wCmp);
 
   for (int cnt = 0; ptr != nullptr && cnt < 10; ptr = ptr->ne) {
     if (getPre(s, bst->vec[ptr->num].en) >= s.size()) {
@@ -243,7 +244,6 @@ void Home::AVLSearch(const QString& s) {
   qDebug() << "AVL Start Searching!";
   int r = avl->Search(s, avl->getRoot());
   qDebug() << "r = " << r;
-  record(wCmp);
   //  qDebug() << "wCmp = " << wCmp;
   //  if (r == -1) {
   //    qDebug("Searching Failed!");
@@ -261,16 +261,28 @@ void Home::AVLSearch(const QString& s) {
 
 void Home::RBSearch(const QString& s) {
   qDebug() << "RBTree Start Searching!";
-  auto it = rbt.lower_bound({s});
-  //  if (it->first.data != s) {
-  //    qDebug("Searching Failed!");
-  //  }
-  record(wCmp);
+
+  auto it = rbt.lower_bound({s});  // the first ele >= s
+
   int cnt = 0;
   for (; it != rbt.end() && cnt < 10; it++) {
     if (getPre(s, it->first.data) >= s.size()) {
       vectorForEnglish.push_back(it->first.data);
       vectorForChinese.push_back(it->second);
+    }
+  }
+}
+
+void Home::TreapSearch(const QString& s) {
+  qDebug() << "Treap Start Searching!";
+
+  int r = trp->query_nex(s);  // the first ele >= s
+
+  for (int i = r, cnt = 0; i < seq.size() && cnt < 10; i++) {
+    if (getPre(s, seq[i].en) >= s.size()) {
+      vectorForEnglish.push_back(seq[i].en);
+      vectorForChinese.push_back(seq[i].zh);
+      cnt++;
     }
   }
 }

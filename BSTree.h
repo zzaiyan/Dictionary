@@ -28,10 +28,13 @@ class BSTree {
 
   BSTree(const vector<wNode>& v) : root(nullptr), vec(v) {
     // Random Distribute
-    for (int i = vec.size() - 1; i >= 0; --i) {
+    int len = vec.size();
+    for (int i = len - 1; i >= 0; --i) {
       srand(i * i * rand());
       swap(vec[rand() % (i + 1)], vec[i]);
     }
+    for (int i = 0; i < len; i++)
+      Insert(i);
   }
   ~BSTree(){};
   BSTNode* getRoot() { return root; }

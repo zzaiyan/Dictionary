@@ -30,8 +30,6 @@ class Treap {
  private:
   tpNode* root;
 
-  vector<wNode> vec;
-
   enum rot_type { LF = 1, RT = 0 };
 
   int q_prev_tmp = 0, q_nex_tmp = 0;
@@ -51,7 +49,7 @@ class Treap {
     } else if (val == cur->val) {
       cur->rep_cnt++;
       cur->siz++;
-    } else if (val < cur->val) {
+    } else if (get(val) < get(cur->val)) {  // get
       _insert(cur->ch[0], val);
       if (cur->ch[0]->rank < cur->rank) {
         _rotate(cur, RT);
@@ -67,10 +65,10 @@ class Treap {
   }
 
   void _del(tpNode*& cur, int val) {
-    if (val > cur->val) {
+    if (get(val) > get(cur->val)) {  // get
       _del(cur->ch[1], val);
       cur->upd_siz();
-    } else if (val < cur->val) {
+    } else if (get(val) < get(cur->val)) {  // get
       _del(cur->ch[0], val);
       cur->upd_siz();
     } else {
@@ -110,7 +108,7 @@ class Treap {
     int less_siz = cur->ch[0] == nullptr ? 0 : cur->ch[0]->siz;
     if (val == cur->val)
       return less_siz + 1;
-    else if (val < cur->val) {
+    else if (get(val) < get(cur->val)) {  // get
       if (cur->ch[0] != nullptr)
         return _query_rank(cur->ch[0], val);
       else
@@ -134,7 +132,7 @@ class Treap {
   }
 
   int _query_prev(tpNode* cur, int val) {
-    if (val <= cur->val) {
+    if (get(val) <= get(cur->val)) {  // get
       if (cur->ch[0] != nullptr)
         return _query_prev(cur->ch[0], val);
     } else {
@@ -146,8 +144,21 @@ class Treap {
     return -1145;
   }
 
+  int _query_prev(tpNode* cur, const QString& str) {
+    if (str <= get(cur->val)) {  // get
+      if (cur->ch[0] != nullptr)
+        return _query_prev(cur->ch[0], str);
+    } else {
+      q_prev_tmp = cur->val;
+      if (cur->ch[1] != nullptr)
+        _query_prev(cur->ch[1], str);
+      return q_prev_tmp;
+    }
+    return -1145;
+  }
+
   int _query_nex(tpNode* cur, int val) {
-    if (val >= cur->val) {
+    if (get(val) >= get(cur->val)) {  // get
       if (cur->ch[1] != nullptr)
         return _query_nex(cur->ch[1], val);
     } else {
@@ -159,8 +170,31 @@ class Treap {
     return -1145;
   }
 
+  int _query_nex(tpNode* cur, const QString& str) {
+    wCmp++;
+    if (str >= get(cur->val)) {  // get
+      if (cur->ch[1] != nullptr)
+        return _query_nex(cur->ch[1], str);
+    } else {
+      q_nex_tmp = cur->val;
+      if (cur->ch[0] != nullptr)
+        _query_nex(cur->ch[0], str);
+      return q_nex_tmp;
+    }
+    return -1145;
+  }
+
  public:
-  Treap(const vector<wNode>& v) : vec(v) {}
+  Treap(const vector<wNode>& v) : vec(v) {
+    for (int i = 0; i < vec.size(); i++) {
+      insert(i);
+      //      if (i % 100 == 0)
+      //        qDebug() << i;
+    }
+  }
+
+  vector<wNode> vec;
+  const QString& get(int val) { return vec[val].en; }
 
   void insert(int val) { _insert(root, val); }
 
@@ -172,7 +206,11 @@ class Treap {
 
   int query_prev(int val) { return _query_prev(root, val); }
 
+  int query_prev(QString str) { return _query_prev(root, str); }
+
   int query_nex(int val) { return _query_nex(root, val); }
+
+  int query_nex(QString str) { return _query_nex(root, str); }
 };
 
 #endif  // TREAP_H

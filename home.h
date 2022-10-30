@@ -39,7 +39,7 @@ class Home : public QWidget {
   void BSTSearch(const QString& s);
   void AVLSearch(const QString& s);
   void RBSearch(const QString& s);
-  void TreapSearch(const QString& s) {}
+  void TreapSearch(const QString& s);
   void TrieSearch(const QString& s) {}
 
   void Search(const QString& s) {
@@ -66,6 +66,7 @@ class Home : public QWidget {
       default:
         break;
     };
+    record(wCmp);
   }
 
  private slots:
