@@ -5,11 +5,12 @@
 
 Home::Home(QWidget* parent) : QWidget(parent), ui(new Ui::Home) {
   ui->setupUi(this);
+  this->setFixedSize(this->size());
   ui->lineEdit->installEventFilter(this);
   ui->tableWidget->installEventFilter(this);
-  ui->treeWidget->installEventFilter(this);
+  ui->historyWidget->installEventFilter(this);
   ui->tableWidget->setHidden(true);
-  ui->treeWidget->setHeaderLabel("HeadLabel");
+  //  ui->treeWidget->setHeaderLabel("HeadLabel");
 
   QStyledItemDelegate* itemDelegate = new QStyledItemDelegate();
   ui->comboBox->setItemDelegate(itemDelegate);
@@ -20,9 +21,24 @@ Home::Home(QWidget* parent) : QWidget(parent), ui(new Ui::Home) {
   ui->tableWidget->setShowGrid(false);              //设置不显示格子线
   ui->tableWidget->verticalHeader()->setVisible(false);  //设置垂直头不可见
   ui->tableWidget->horizontalHeader()->setVisible(false);  //设置水平头不可见
-  ui->tableWidget->horizontalHeader()->resizeSection(0, 160);
-  ui->tableWidget->horizontalHeader()->resizeSection(1, 260);
+  ui->tableWidget->horizontalHeader()->resizeSection(0, 180);
+  //  ui->tableWidget->horizontalHeader()->resizeSection(1, 260);
 
+  //  ui->historyWidget->setFrameShape(QFrame::NoFrame);  //设置无边框
+  //  ui->historyWidget->setShowGrid(false);  //设置不显示格子线
+  //  ui->historyWidget->verticalHeader()->setVisible(false); //设置垂直头不可见
+  //  ui->historyWidget->horizontalHeader()->setVisible(false);
+  //  ui->historyWidget->horizontalHeader()->resizeSection(0, 160);
+  //  ui->historyWidget->horizontalHeader()->resizeSection(1, 260);
+
+  model = new QStandardItemModel(this);
+  model->setHorizontalHeaderItem(0, new QStandardItem("English"));
+  model->setHorizontalHeaderItem(1, new QStandardItem("Chinese"));
+  //  model->horizontalHeaderItem(0)
+
+  ui->historyWidget->verticalHeader()->setDefaultSectionSize(30);
+  ui->historyWidget->horizontalHeader()->setDefaultSectionSize(160);
+  ui->historyWidget->setModel(model);
   build();  // Read Dict File
 }
 
@@ -105,42 +121,36 @@ void Home::on_pushButton_clicked() {
   vectorForChinese.clear();
   //  ui->treeWidget->clear();
   ui->tableWidget->hide();
+  QString s;
   if (!(ui->lineEdit->text().isEmpty())) {
-    QString s;
-    QString str1;
-    QString str2;
-    if (!(ui->lineEdit->text().isEmpty())) {
-      s = ui->lineEdit->text();
+    s = ui->lineEdit->text();
 
-      Search(s);
+    Search(s);
 
-      if (vectorForEnglish.size() <= 0) {
-        QMessageBox::warning(nullptr, "warning", "Can't find it !",
-                             QMessageBox::Yes | QMessageBox::No,
-                             QMessageBox::Yes);
-      } else {
-        if (vectorForEnglish[0].length() <= 0) {
-          QMessageBox::warning(nullptr, "warning", "Can't find it !",
-                               QMessageBox::Yes | QMessageBox::No,
-                               QMessageBox::Yes);
-        } else {
-          str2 = vectorForChinese[0];
-          QTreeWidgetItem* item = new QTreeWidgetItem(
-              QStringList() << ui->lineEdit->text() << str2);
-          ui->treeWidget->addTopLevelItem(item);
-        };
-      }
+    if (vectorForEnglish.size() && vectorForEnglish[0] == s) {
+      model->insertRow(0);
+      model->setItem(0, 0, new QStandardItem(vectorForEnglish[0]));
+      model->setItem(0, 1, new QStandardItem(vectorForChinese[0]));
+    } else {
+      QMessageBox::warning(nullptr, "warning", "Can't find it !",
+                           QMessageBox::Yes | QMessageBox::No,
+                           QMessageBox::Yes);
     }
   } else {
     QMessageBox::warning(nullptr, "warning", "Plz tap a word first!",
                          QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
   }
   return;
-};
+}
 
 void Home::on_tableWidget_cellDoubleClicked(int row, int column) {
   if (ui->tableWidget->item(row, column)->text().length()) {
-    ui->lineEdit->setText(ui->tableWidget->item(row, column)->text());
+    ui->lineEdit->setText(ui->tableWidget->item(row, 0)->text());
+
+    model->insertRow(0);
+    model->setItem(0, 0, new QStandardItem(vectorForEnglish[row]));
+    model->setItem(0, 1, new QStandardItem(vectorForChinese[row]));
+
     ui->tableWidget->setHidden(true);
   }
 }
@@ -168,21 +178,22 @@ void Home::build() {
   }
   sort(seq.begin(), seq.end());
   qDebug() << "seq.size = " << seq.size();
-  //  qDebug() << seq.front().zh;
 
-  // Start build AVL
+  // Start build AVL, RBT
+  bst = new BSTree(seq);
   avl = new AVLTree(seq);
-  auto rt = avl->getRoot();
   for (int i = 0; i < seq.size(); i++) {
-    avl->Insert(i, rt);
+    bst->Insert(i);
+    avl->Insert(i);
     rbt.insert({{seq[i].en}, seq[i].zh});
   }
+  qDebug() << "bst.size = " << bst->vec.size();
   qDebug() << "avl.size = " << avl->vec.size();
   qDebug() << "rbt.size = " << rbt.size();
   ifs.close();
 }
 
-void Home::BasicSearch(QString s) {
+void Home::BasicSearch(const QString& s) {
   int r = 0, maxPre = 0;
   for (; r < seq.size(); r++) {
     wCmp++;
@@ -201,7 +212,27 @@ void Home::BasicSearch(QString s) {
   }
 }
 
-void Home::AVLSearch(QString s) {
+void Home::BSTSearch(const QString& s) {
+  int r = bst->Search(s, bst->getRoot());
+  qDebug() << "r = " << r;
+  record(wCmp);
+  //  qDebug() << "wCmp = " << wCmp;
+  if (r == -1) {
+    qDebug("Searching Failed!");
+    return;
+  }
+  r = abs(avl->Search(s));
+  //  r = 0;
+  for (int i = r, cnt = 0; i < seq.size() && cnt < 10; i++) {
+    if (getPre(s, seq[i].en) >= s.size()) {
+      vectorForEnglish.push_back(seq[i].en);
+      vectorForChinese.push_back(seq[i].zh);
+      cnt++;
+    }
+  }
+}
+
+void Home::AVLSearch(const QString& s) {
   int r = avl->Search(s, avl->getRoot());
   qDebug() << "r = " << r;
   record(wCmp);
@@ -220,7 +251,7 @@ void Home::AVLSearch(QString s) {
   }
 }
 
-void Home::RBSearch(QString s) {
+void Home::RBSearch(const QString& s) {
   auto it = rbt.lower_bound({s});
   if (it->first.data != s) {
     qDebug("Searching Failed!");

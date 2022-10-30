@@ -10,6 +10,7 @@
 #include <QStringList>
 #include <QWidget>
 #include "AVLTree.h"
+#include "BSTree.h"
 #include "wNode.h"
 
 using namespace std;
@@ -33,14 +34,14 @@ class Home : public QWidget {
   ~Home();
   int SearchModelChoice = 0;
   // Search
-  void BasicSearch(QString s);
-  void BSTSearch(QString s) {}
-  void AVLSearch(QString s);
-  void RBSearch(QString s);
-  void TreapSearch(QString s) {}
-  void TrieSearch(QString s) {}
+  void BasicSearch(const QString& s);
+  void BSTSearch(const QString& s);
+  void AVLSearch(const QString& s);
+  void RBSearch(const QString& s);
+  void TreapSearch(const QString& s) {}
+  void TrieSearch(const QString& s) {}
 
-  void Search(QString s) {
+  void Search(const QString& s) {
     wCmp = 0;
     switch (SearchModelChoice) {
       case 0:
@@ -78,12 +79,14 @@ class Home : public QWidget {
 
  private:
   Ui::Home* ui;
+  QStandardItemModel* model;
 
   int getPre(const QString& str1, const QString& str2) const;
   void record(int t);
 
   // Data
   vector<wNode> seq;
+  BSTree* bst;
   AVLTree* avl;
   map<rbNode, QString> rbt;
   void build();

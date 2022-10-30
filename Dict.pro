@@ -10,12 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     AVLTree.cpp \
+    BSTree.cpp \
     home.cpp \
     main.cpp \
     wNode.cpp
 
 HEADERS += \
     AVLTree.h \
+    BSTree.h \
     RBTree.h \
     home.h \
     wNode.h

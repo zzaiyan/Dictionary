@@ -1,6 +1,6 @@
 #include "AVLTree.h"
 
-int AVLTree::Search(const QString s, AVLNode* ptr) {
+int AVLTree::Search(const QString& s, AVLNode* ptr) {
   // Alert: ptr != nullptr
   wCmp++;
   if (s < getEn(ptr) && ptr->left)

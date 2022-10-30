@@ -8,10 +8,7 @@
 using namespace std;
 
 struct AVLNode {
-  //  QString data;
-
-  int bf;
-  int num;
+  int bf, num;
   AVLNode *left, *right;
   AVLNode() : bf(0), num(-1), left(nullptr), right(nullptr) {}
   AVLNode(int n, AVLNode* l = nullptr, AVLNode* r = nullptr)
@@ -26,8 +23,8 @@ class AVLTree {
   void RotateLR(AVLNode*& ptr);
   void RotateRL(AVLNode*& ptr);
 
-  QString getEn(AVLNode* p) { return vec[p->num].en; }
-  QString getZh(AVLNode* p) { return vec[p->num].zh; }
+  const QString& getEn(AVLNode* p) { return vec[p->num].en; }
+  const QString& getZh(AVLNode* p) { return vec[p->num].zh; }
 
  public:
   vector<wNode> vec;
@@ -36,7 +33,9 @@ class AVLTree {
   ~AVLTree(){};
   AVLNode* getRoot() { return root; }
   bool Insert(int n, AVLNode*& ptr);
-  int Search(const QString s, AVLNode* ptr = nullptr);
+  bool Insert(int n) { return Insert(n, root); }
+  int Search(const QString& s, AVLNode* ptr);
+  int Search(const QString& s) { return Search(s, root); }
 
   void midOrder(AVLNode* p) {
     if (p) {
