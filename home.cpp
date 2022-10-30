@@ -60,7 +60,8 @@ int Home::getPre(const QString& str1, const QString& str2) const {
 bool Home::eventFilter(QObject* watched, QEvent* event) {
   if (watched == ui->lineEdit) {
     if (event->type() == QEvent::FocusIn) {
-      ui->tableWidget->setHidden(false);
+      if (vectorForEnglish.size())
+        ui->tableWidget->setHidden(false);
     }
     if (event->type() == QEvent::FocusOut) {
       ui->tableWidget->setHidden(true);
@@ -183,9 +184,10 @@ void Home::build() {
   sort(seq.begin(), seq.end());
   qDebug() << "seq.size = " << seq.size();
 
-  // Start build AVL, RBT
+  // Start build BST, AVL, RBT
   bst = new BSTree(seq);
   avl = new AVLTree(seq);
+  //  trp = new Treap(seq);
   for (int i = 0; i < seq.size(); i++) {
     bst->Insert(i);
     avl->Insert(i);
@@ -200,7 +202,7 @@ void Home::build() {
 }
 
 void Home::BasicSearch(const QString& s) {
-  qDebug() << "SeqList Start Searching!";
+  //  qDebug() << "SeqList Start Searching!";
   int r = 0, maxPre = 0;
   for (; r < seq.size(); r++) {
     wCmp++;

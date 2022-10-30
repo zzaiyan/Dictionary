@@ -27,9 +27,9 @@ class BSTree {
   vector<wNode> vec;
 
   BSTree(const vector<wNode>& v) : root(nullptr), vec(v) {
-    // Random Distibute
+    // Random Distribute
     for (int i = vec.size() - 1; i >= 0; --i) {
-      srand((unsigned)time(NULL));
+      srand(i * i * rand());
       swap(vec[rand() % (i + 1)], vec[i]);
     }
   }

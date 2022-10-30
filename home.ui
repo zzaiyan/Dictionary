@@ -269,6 +269,7 @@ QTableWidget::item:hover{
     <font>
      <family>JetBrains Mono</family>
      <pointsize>12</pointsize>
+     <bold>false</bold>
     </font>
    </property>
    <property name="focusPolicy">

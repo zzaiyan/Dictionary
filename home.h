@@ -11,6 +11,7 @@
 #include <QWidget>
 #include "AVLTree.h"
 #include "BSTree.h"
+#include "Treap.h"
 #include "wNode.h"
 
 using namespace std;
@@ -66,7 +67,7 @@ class Home : public QWidget {
         break;
     };
   }
-  ///////////////////////////////////////////////////////Search函数///////////////////////////////////////////////
+
  private slots:
 
   void on_comboBox_currentIndexChanged(int index);
@@ -89,6 +90,7 @@ class Home : public QWidget {
   BSTree* bst;
   AVLTree* avl;
   map<rbNode, QString> rbt;
+  Treap* trp;
   void build();
 };
 #endif  // HOME_H
