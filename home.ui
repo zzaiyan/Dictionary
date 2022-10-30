@@ -16,6 +16,12 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="font">
+   <font>
+    <family>JetBrains Mono</family>
+    <pointsize>12</pointsize>
+   </font>
+  </property>
   <property name="focusPolicy">
    <enum>Qt::ClickFocus</enum>
   </property>

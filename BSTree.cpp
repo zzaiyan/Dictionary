@@ -1,19 +1,19 @@
 #include "BSTree.h"
 
-int BSTree::Search(const QString& s, BSTNode* ptr) {
+BSTNode* BSTree::Search(const QString& s, BSTNode* ptr) {
   // Alert: ptr != nullptr
   wCmp++;
   if (builded) {
-    qDebug() << QString("Cmp %1 with %2").arg(s).arg(getEn(ptr));
+    mark(s, getEn(ptr));
   }
   if (s < getEn(ptr) && ptr->left)
     return Search(s, ptr->left);
   if (s > getEn(ptr) && ptr->right)
     return Search(s, ptr->right);
   if (s == getEn(ptr)) {
-    return ptr->num;
+    return ptr;
   }
-  return -1 * ptr->num;  // Last Before Failure
+  return ptr;  // Last Before Failure
 }
 
 bool BSTree::Insert(int n, BSTNode*& ptr) {
@@ -65,4 +65,24 @@ bool BSTree::Insert(int n, BSTNode*& ptr) {
     }
   }
   return true;
+}
+
+void BSTree::makeClue() {
+  queue<BSTNode*> que;
+  joinQue(root, que);
+  BSTNode* tmp;
+  while (que.size()) {
+    tmp = que.front();
+    que.pop();
+    tmp->ne = que.front();
+  }
+  tmp->ne = nullptr;
+}
+
+void BSTree::joinQue(BSTNode* now, queue<BSTNode*>& q) {
+  if (now) {
+    joinQue(now->left, q);
+    q.push(now);
+    joinQue(now->right, q);
+  }
 }

@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QString>
+#include <queue>
 #include <stack>
 #include "wNode.h"
 using namespace std;
@@ -19,7 +20,6 @@ class BSTree {
  private:
   BSTNode* root;
 
-  void makeClue();
   const QString& getEn(BSTNode* p) { return vec[p->num].en; }
   const QString& getZh(BSTNode* p) { return vec[p->num].zh; }
 
@@ -37,8 +37,10 @@ class BSTree {
   BSTNode* getRoot() { return root; }
   bool Insert(int n, BSTNode*& ptr);
   bool Insert(int n) { return Insert(n, root); }
-  int Search(const QString& s, BSTNode* ptr = nullptr);
-  int Search(const QString& s) { return Search(s, root); }
+  BSTNode* Search(const QString& s, BSTNode* ptr = nullptr);
+  BSTNode* Search(const QString& s) { return Search(s, root); }
+  void makeClue();
+  void joinQue(BSTNode*, queue<BSTNode*>& q);
 
   void midOrder(BSTNode* p) {
     if (p) {

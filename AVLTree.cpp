@@ -4,7 +4,7 @@ int AVLTree::Search(const QString& s, AVLNode* ptr) {
   // Alert: ptr != nullptr
   wCmp++;
   if (builded) {
-    qDebug() << QString("Cmp %1 with %2").arg(s).arg(getEn(ptr));
+    mark(s, getEn(ptr));
   }
   if (s < getEn(ptr) && ptr->left)
     return Search(s, ptr->left);

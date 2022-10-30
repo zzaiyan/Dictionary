@@ -192,6 +192,8 @@ void Home::build() {
     rbt.insert({{seq[i].en}, seq[i].zh});
   }
   qDebug() << "bst.size = " << bst->vec.size();
+  bst->makeClue();
+  qDebug() << "bst is Clued";
   qDebug() << "avl.size = " << avl->vec.size();
   qDebug() << "rbt.size = " << rbt.size();
   ifs.close();
@@ -202,9 +204,9 @@ void Home::BasicSearch(const QString& s) {
   int r = 0, maxPre = 0;
   for (; r < seq.size(); r++) {
     wCmp++;
-    if (builded) {
-      qDebug() << QString("Cmp %1 with %2").arg(s).arg(seq[r].en);
-    }
+    //    if (builded) {
+    //      qDebug() << QString("Cmp %1 with %2").arg(s).arg(seq[r].en);
+    //    }
     int Pre = getPre(seq[r].en, s);
     maxPre = max(Pre, maxPre);
     if (maxPre >= s.size())
@@ -221,22 +223,15 @@ void Home::BasicSearch(const QString& s) {
 }
 
 void Home::BSTSearch(const QString& s) {
-  qDebug() << "AVL Start Searching!";
-  int r = bst->Search(s, bst->getRoot());
-  qDebug() << "r = " << r;
+  qDebug() << "BST Start Searching!";
+  auto ptr = bst->Search(s, bst->getRoot());
+  qDebug() << "ptr.num = " << ptr->num;
   record(wCmp);
-  //  qDebug() << "wCmp = " << wCmp;
-  if (r == -1) {
-    qDebug("Searching Failed!");
-    return;
-  }
-  builded = 0;
-  r = abs(avl->Search(s));
-  builded = 1;
-  for (int i = r, cnt = 0; i < seq.size() && cnt < 10; i++) {
-    if (getPre(s, seq[i].en) >= s.size()) {
-      vectorForEnglish.push_back(seq[i].en);
-      vectorForChinese.push_back(seq[i].zh);
+
+  for (int cnt = 0; ptr != nullptr && cnt < 10; ptr = ptr->ne) {
+    if (getPre(s, bst->vec[ptr->num].en) >= s.size()) {
+      vectorForEnglish.push_back(bst->vec[ptr->num].en);
+      vectorForChinese.push_back(bst->vec[ptr->num].zh);
       cnt++;
     }
   }
@@ -265,9 +260,9 @@ void Home::AVLSearch(const QString& s) {
 void Home::RBSearch(const QString& s) {
   qDebug() << "RBTree Start Searching!";
   auto it = rbt.lower_bound({s});
-  if (it->first.data != s) {
-    //    qDebug("Searching Failed!");
-  }
+  //  if (it->first.data != s) {
+  //    qDebug("Searching Failed!");
+  //  }
   record(wCmp);
   int cnt = 0;
   for (; it != rbt.end() && cnt < 10; it++) {

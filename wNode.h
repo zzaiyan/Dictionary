@@ -5,6 +5,8 @@
 #include <QString>
 extern int wCmp, builded;
 
+void mark(const QString& a, const QString& b);
+
 struct wNode {
   QString en, zh;
   bool operator<(const wNode& b) const {
@@ -21,7 +23,7 @@ struct rbNode {
   bool operator<(const rbNode& b) const {
     wCmp++;
     if (builded) {
-      qDebug() << QString("Cmp %1 with %2").arg(data).arg(b.data);
+      mark(data, b.data);
     }
     return data < b.data;
   }
