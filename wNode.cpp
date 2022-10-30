@@ -1,3 +1,3 @@
 #include "wNode.h"
 
-int wCmp;
+int wCmp, builded;

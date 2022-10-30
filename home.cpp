@@ -22,6 +22,8 @@ Home::Home(QWidget* parent) : QWidget(parent), ui(new Ui::Home) {
   ui->tableWidget->verticalHeader()->setVisible(false);  //设置垂直头不可见
   ui->tableWidget->horizontalHeader()->setVisible(false);  //设置水平头不可见
   ui->tableWidget->horizontalHeader()->resizeSection(0, 180);
+  ui->tableWidget->setSelectionBehavior(
+      QAbstractItemView::SelectRows);  //整行选中
   //  ui->tableWidget->horizontalHeader()->resizeSection(1, 260);
 
   //  ui->historyWidget->setFrameShape(QFrame::NoFrame);  //设置无边框
@@ -39,7 +41,9 @@ Home::Home(QWidget* parent) : QWidget(parent), ui(new Ui::Home) {
   ui->historyWidget->verticalHeader()->setDefaultSectionSize(30);
   ui->historyWidget->horizontalHeader()->setDefaultSectionSize(160);
   ui->historyWidget->setModel(model);
+  builded = 0;
   build();  // Read Dict File
+  builded = 1;
 }
 
 Home::~Home() {
@@ -194,9 +198,13 @@ void Home::build() {
 }
 
 void Home::BasicSearch(const QString& s) {
+  qDebug() << "SeqList Start Searching!";
   int r = 0, maxPre = 0;
   for (; r < seq.size(); r++) {
     wCmp++;
+    if (builded) {
+      qDebug() << QString("Cmp %1 with %2").arg(s).arg(seq[r].en);
+    }
     int Pre = getPre(seq[r].en, s);
     maxPre = max(Pre, maxPre);
     if (maxPre >= s.size())
@@ -213,6 +221,7 @@ void Home::BasicSearch(const QString& s) {
 }
 
 void Home::BSTSearch(const QString& s) {
+  qDebug() << "AVL Start Searching!";
   int r = bst->Search(s, bst->getRoot());
   qDebug() << "r = " << r;
   record(wCmp);
@@ -221,8 +230,9 @@ void Home::BSTSearch(const QString& s) {
     qDebug("Searching Failed!");
     return;
   }
+  builded = 0;
   r = abs(avl->Search(s));
-  //  r = 0;
+  builded = 1;
   for (int i = r, cnt = 0; i < seq.size() && cnt < 10; i++) {
     if (getPre(s, seq[i].en) >= s.size()) {
       vectorForEnglish.push_back(seq[i].en);
@@ -233,14 +243,15 @@ void Home::BSTSearch(const QString& s) {
 }
 
 void Home::AVLSearch(const QString& s) {
+  qDebug() << "AVL Start Searching!";
   int r = avl->Search(s, avl->getRoot());
   qDebug() << "r = " << r;
   record(wCmp);
   //  qDebug() << "wCmp = " << wCmp;
-  if (r == -1) {
-    qDebug("Searching Failed!");
-    return;
-  }
+  //  if (r == -1) {
+  //    qDebug("Searching Failed!");
+  //    return;
+  //  }
   r = abs(r);
   for (int i = r, cnt = 0; i < seq.size() && cnt < 10; i++) {
     if (getPre(s, seq[i].en) >= s.size()) {
@@ -252,9 +263,10 @@ void Home::AVLSearch(const QString& s) {
 }
 
 void Home::RBSearch(const QString& s) {
+  qDebug() << "RBTree Start Searching!";
   auto it = rbt.lower_bound({s});
   if (it->first.data != s) {
-    qDebug("Searching Failed!");
+    //    qDebug("Searching Failed!");
   }
   record(wCmp);
   int cnt = 0;
