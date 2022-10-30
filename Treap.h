@@ -172,6 +172,7 @@ class Treap {
 
   int _query_nex(tpNode* cur, const QString& str) {
     wCmp++;
+    mark(str, get(cur->val));
     if (str >= get(cur->val)) {  // get
       if (cur->ch[1] != nullptr)
         return _query_nex(cur->ch[1], str);
@@ -185,7 +186,7 @@ class Treap {
   }
 
  public:
-  Treap(const vector<wNode>& v) : vec(v) {
+  Treap(const vector<wNode>& v) : vec(v), root(nullptr) {
     for (int i = 0; i < vec.size(); i++) {
       insert(i);
       //      if (i % 100 == 0)

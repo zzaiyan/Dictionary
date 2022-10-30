@@ -12,6 +12,7 @@ SOURCES += \
     AVLTree.cpp \
     BSTree.cpp \
     Treap.cpp \
+    Trie.cpp \
     home.cpp \
     main.cpp \
     wNode.cpp
@@ -21,6 +22,7 @@ HEADERS += \
     BSTree.h \
     RBTree.h \
     Treap.h \
+    Trie.h \
     home.h \
     wNode.h
 

@@ -201,6 +201,9 @@ void Home::build() {
   trp = new Treap(seq);
   qDebug() << "trp builded";
 
+  trie = new Trie(seq);
+  qDebug() << "trie builded";
+
   ifs.close();
 }
 
@@ -277,6 +280,24 @@ void Home::TreapSearch(const QString& s) {
   qDebug() << "Treap Start Searching!";
 
   int r = trp->query_nex(s);  // the first ele >= s
+
+  for (int i = r, cnt = 0; i < seq.size() && cnt < 10; i++) {
+    if (getPre(s, seq[i].en) >= s.size()) {
+      vectorForEnglish.push_back(seq[i].en);
+      vectorForChinese.push_back(seq[i].zh);
+      cnt++;
+    }
+  }
+}
+
+void Home::TrieSearch(const QString& s) {
+  qDebug() << "Trie Start Searching!";
+
+  int r = trie->find(s);
+
+  qDebug() << "r = " << r;
+  if (r > 0)
+    r--;
 
   for (int i = r, cnt = 0; i < seq.size() && cnt < 10; i++) {
     if (getPre(s, seq[i].en) >= s.size()) {

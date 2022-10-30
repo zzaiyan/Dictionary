@@ -12,6 +12,7 @@
 #include "AVLTree.h"
 #include "BSTree.h"
 #include "Treap.h"
+#include "Trie.h"
 #include "wNode.h"
 
 using namespace std;
@@ -40,7 +41,7 @@ class Home : public QWidget {
   void AVLSearch(const QString& s);
   void RBSearch(const QString& s);
   void TreapSearch(const QString& s);
-  void TrieSearch(const QString& s) {}
+  void TrieSearch(const QString& s);
 
   void Search(const QString& s) {
     wCmp = 0;
@@ -92,6 +93,7 @@ class Home : public QWidget {
   AVLTree* avl;
   map<rbNode, QString> rbt;
   Treap* trp;
+  Trie* trie;
   void build();
 };
 #endif  // HOME_H
