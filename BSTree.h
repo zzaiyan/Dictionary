@@ -1,6 +1,7 @@
 #ifndef BSTREE_H
 #define BSTREE_H
 
+#include <QDateTime>
 #include <QDebug>
 #include <QString>
 #include <queue>
@@ -28,6 +29,9 @@ class BSTree {
 
   BSTree(const vector<wNode>& v) : root(nullptr), vec(v) {
     // Random Distribute
+    auto tt = QDateTime::currentMSecsSinceEpoch();
+    srand(tt % 2147483647);
+    qDebug() << "tt = " << tt;
     int len = vec.size();
     for (int i = len - 1; i >= 0; --i) {
       srand(i * i * rand());
