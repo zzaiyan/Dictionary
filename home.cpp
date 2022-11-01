@@ -124,7 +124,6 @@ void Home::on_lineEdit_textChanged(const QString& arg1) {
 void Home::on_pushButton_clicked() {
   vectorForEnglish.clear();
   vectorForChinese.clear();
-  //  ui->treeWidget->clear();
   ui->tableWidget->hide();
   QString s;
   if (!(ui->lineEdit->text().isEmpty())) {
@@ -145,7 +144,6 @@ void Home::on_pushButton_clicked() {
     QMessageBox::warning(nullptr, "warning", "Plz tap a word first!",
                          QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
   }
-  return;
 }
 
 void Home::on_tableWidget_cellDoubleClicked(int row, int column) {
@@ -303,6 +301,7 @@ void Home::RBSearch(const QString& s) {
     if (getPre(s, it->first.data) >= s.size()) {
       vectorForEnglish.push_back(it->first.data);
       vectorForChinese.push_back(it->second);
+      cnt++;
     }
   }
 }
