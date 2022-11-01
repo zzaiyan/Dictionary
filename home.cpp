@@ -1,6 +1,4 @@
 #include "home.h"
-#include <QStyledItemDelegate>
-
 #include "ui_home.h"
 
 Home::Home(QWidget* parent) : QWidget(parent), ui(new Ui::Home) {
@@ -10,7 +8,9 @@ Home::Home(QWidget* parent) : QWidget(parent), ui(new Ui::Home) {
   ui->tableWidget->installEventFilter(this);
   ui->historyWidget->installEventFilter(this);
   ui->tableWidget->setHidden(true);
-  //  ui->treeWidget->setHeaderLabel("HeadLabel");
+
+  QRegularExpression tempExp("[a-z]+");
+  ui->lineEdit->setValidator(new QRegularExpressionValidator(tempExp, this));
 
   QStyledItemDelegate* itemDelegate = new QStyledItemDelegate();
   ui->comboBox->setItemDelegate(itemDelegate);
@@ -170,8 +170,19 @@ void Home::build() {
     qDebug() << "File open error!";
     exit(1);
   }
+  // Record the Time of Building
+  auto Timer = new QElapsedTimer;
+  Timer->start();
+
   seq.clear();
   string buf;
+
+  auto tt = Timer->nsecsElapsed();
+  unsigned RandomSeat = tt * tt * tt * tt;
+  qDebug() << "Random Seat = " << RandomSeat;
+  srand(RandomSeat);
+
+  auto t0 = Timer->nsecsElapsed();
   while (getline(ifs, buf)) {
     int div = 0, len = buf.size();
     for (; div < len && buf[div] != ','; div++)
@@ -181,30 +192,50 @@ void Home::build() {
     //    qDebug() << en << zh;
     seq.push_back({en, zh});
   }
+  ifs.close();
   sort(seq.begin(), seq.end());
-  qDebug() << "seq.size = " << seq.size();
+  auto t1 = Timer->nsecsElapsed();
 
+  qDebug()
+      << QString("Read File and Build SeqList with %1 ms").arg((t1 - t0) / 1e6);
+
+  t0 = Timer->nsecsElapsed();
   bst = new BSTree(seq);
-  qDebug() << "bst builded";
+  t1 = Timer->nsecsElapsed();
+
+  qDebug() << QString("Build BST with %1 ms").arg((t1 - t0) / 1e6);
+
+  t0 = Timer->nsecsElapsed();
   bst->makeClue();
-  qDebug() << "bst is Clued";
+  t1 = Timer->nsecsElapsed();
 
+  qDebug() << QString("Make BST Clued with %1 ms").arg((t1 - t0) / 1e6);
+
+  t0 = Timer->nsecsElapsed();
   avl = new AVLTree(seq);
-  qDebug() << "avl builded";
+  t1 = Timer->nsecsElapsed();
 
+  qDebug() << QString("Build AVL with %1 ms").arg((t1 - t0) / 1e6);
+
+  t0 = Timer->nsecsElapsed();
   for (int i = 0; i < seq.size(); i++) {
     rbt.insert({{seq[i].en}, seq[i].zh});
   }
+  t1 = Timer->nsecsElapsed();
 
-  qDebug() << "rbt builded";
+  qDebug() << QString("Build RBT with %1 ms").arg((t1 - t0) / 1e6);
 
+  t0 = Timer->nsecsElapsed();
   trp = new Treap(seq);
-  qDebug() << "trp builded";
+  t1 = Timer->nsecsElapsed();
+  qDebug() << QString("Build Treap with %1 ms").arg((t1 - t0) / 1e6);
 
+  t0 = Timer->nsecsElapsed();
   trie = new Trie(seq);
-  qDebug() << "trie builded";
+  t1 = Timer->nsecsElapsed();
+  qDebug() << QString("Build Trie with %1 ms").arg((t1 - t0) / 1e6);
 
-  ifs.close();
+  delete Timer;
 }
 
 void Home::BasicSearch(const QString& s) {
@@ -265,7 +296,7 @@ void Home::AVLSearch(const QString& s) {
 void Home::RBSearch(const QString& s) {
   qDebug() << "RBTree Start Searching!";
 
-  auto it = rbt.lower_bound({s});  // the first ele >= s
+  auto it = rbt.lower_bound({s});  // the first Ele that >= s
 
   int cnt = 0;
   for (; it != rbt.end() && cnt < 10; it++) {
@@ -279,7 +310,7 @@ void Home::RBSearch(const QString& s) {
 void Home::TreapSearch(const QString& s) {
   qDebug() << "Treap Start Searching!";
 
-  int r = trp->query_nex(s);  // the first ele >= s
+  int r = trp->query_nex(s) - 1;  // the first Ele that >= s
 
   for (int i = r, cnt = 0; i < seq.size() && cnt < 10; i++) {
     if (getPre(s, seq[i].en) >= s.size()) {

@@ -2,12 +2,16 @@
 #define HOME_H
 
 #include <bits/stdc++.h>
+#include <QElapsedTimer>
 #include <QEvent>
 #include <QLabel>
 #include <QMessageBox>
+#include <QRegularExpression>
+#include <QRegularExpressionValidator>
 #include <QStandardItemModel>
 #include <QString>
 #include <QStringList>
+#include <QStyledItemDelegate>
 #include <QWidget>
 #include "AVLTree.h"
 #include "BSTree.h"

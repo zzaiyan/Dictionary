@@ -186,7 +186,7 @@ class Treap {
   }
 
  public:
-  Treap(const vector<wNode>& v) : vec(v), root(nullptr) {
+  Treap(const vector<wNode>& v) : root(nullptr), vec(v) {
     for (int i = 0; i < vec.size(); i++) {
       insert(i);
       //      if (i % 100 == 0)

@@ -30,7 +30,7 @@ class Trie {
   }
 
   void insert(const QString& s, int val) {
-    insert(s.toLower().toStdString().data(), s.length(), val);
+    insert(s.toStdString().data(), s.length(), val);
   }
 
   int find(char* s, int l) {  // 查找字符串
@@ -53,7 +53,7 @@ class Trie {
   }
 
   int find(const QString& s) {
-    return find(s.toLower().toStdString().data(), s.length());
+    return find(s.toStdString().data(), s.length());
   }
 };
 
