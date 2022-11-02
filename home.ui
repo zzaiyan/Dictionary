@@ -35,33 +35,6 @@ QComboBox QAbstractItemView::item {
 	min-width: 60px;
 }
 
-
-QTextEdit{
-	border: 1px solid #BEBFC2;
-	border-radius: 2px;
-}
-QLabel{
-	color: #4F596A;
-}
-QTableWidget{
-	 border: 1px solid #BEBFC2;
-	color: #444;
-}
-QTreeWidget{
-    color: #444;
-	padding:5px;
-    background-color: white;
-    border: 1px solid #BEBFC2;
-	border-radius: 5px;
-}
-QTableWidget::item:selected{
-	border: 1px solid #BEBFC2;
-	color: #444;
-}
- 
-QTableWidget::item:hover{
-	background: #f6f6f6;
-}
 </string>
   </property>
   <widget class="QTableWidget" name="tableWidget">
